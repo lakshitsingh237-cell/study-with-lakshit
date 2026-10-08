@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="hi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NCERT Vigyan & Ganit AI Shikshak - एनसीईआरटी विज्ञान एवं गणित एआई शिक्षक</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Kalam:wght@400;700&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans Devanagari', 'sans-serif'],
+                        chalk: ['Kalam', 'cursive', 'sans-serif'],
+                        ncert: ['Fredoka', 'sans-serif'],
+                    },
+                    colors: {
+                        board: {
+                            green: '#0d331e',
+                            border: '#3d230d',
+                            chalk: '#f8fafc',
+                            yellowChalk: '#fef08a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0d9488;
+            border-radius: 6px;
+        }
+
+        /* Sound Wave Animation */
+        @keyframes wave {
+            0%, 100% { height: 6px; }
+            50% { height: 26px; }
+        }
+        .animate-wave-bar {
+            animation: wave 0.5s infinite ease-in-out;
+        }
+
+        /* Realistic Wooden Frame */
+        .chalkboard-frame {
+            border: 14px solid #3d230d;
+            box-shadow: inset 0 0 45px rgba(0,0,0,0.9), 0 15px 35px -5px rgba(0,0,0,0.6);
+        }
+        .chalk-tray {
+            height: 14px;
+            background: linear-gradient(to bottom, #6b3e18, #3d230d);
+            border-top: 2px solid #291606;
+        }
+
+        /* Page Flip & Reader Effects */
+        .page-flip-anim {
+            animation: pageFlip 0.35s ease-out;
+        }
+        @keyframes pageFlip {
+            0% { transform: rotateY(-12deg) scale(0.98); opacity: 0.7; }
+            100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+        }
+
+        .dark-reader-mode {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+        }
+        .dark-reader-mode .bg-slate-50, .dark-reader-mode .bg-white {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+        .dark-reader-mode .text-slate-900, .dark-reader-mode .text-slate-800, .dark-reader-mode .text-slate-700 {
+            color: #f1f5f9 !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-teal-600 selection:text-white">
+
+    <!-- Sticky Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                
+                <!-- Logo & Brand Name -->
+                <div class="flex items-center gap-3 cursor-pointer shrink-0" onclick="switchTab('ai-solver')">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-600 via-emerald-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-teal-200">
+                        <i data-lucide="atom" class="w-6 h-6 animate-spin-slow"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-extrabold text-lg text-slate-900 tracking-tight">NCERT <span class="text-teal-600">Vigyan & Ganit</span> AI Shikshak</span>
+                            <span class="bg-teal-100 text-teal-800 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider border border-teal-200">Classes 6-9 Science & Math</span>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium hidden md:block">एनसीईआरटी विज्ञान एवं गणित एआई शिक्षक • Interactive Book Reader & Live Chalkboard</p>
+                    </div>
+                </div>
+
+                <!-- Global Search Box -->
+                <div class="flex-1 max-w-md hidden sm:block relative">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+                    <input type="text" id="global-search" onkeyup="handleGlobalSearch(this.value)" placeholder="Search Science topics (Photosynthesis, Cell), Math (Tally, Integers)..." 
+                           class="w-full bg-slate-100 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+                </div>
+
+                <!-- Language Toggle Button -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="toggleGlobalLanguage()" id="lang-toggle-btn" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-teal-50 border border-teal-200 text-teal-800 font-bold text-xs sm:text-sm hover:bg-teal-100 transition-colors shadow-sm">
+                        <i data-lucide="languages" class="w-4 h-4 text-teal-600"></i>
+                        <span id="current-lang-text">Hindi (हिंदी)</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Navigation Bar Tabs -->
+        <div class="bg-slate-50 border-t border-slate-200 px-4 overflow-x-auto custom-scrollbar">
+            <div class="max-w-7xl mx-auto flex items-center gap-2 py-2 text-xs sm:text-sm font-semibold min-w-max">
+                <button onclick="switchTab('ai-solver')" id="tab-btn-ai-solver" class="tab-button flex items-center gap-2 px-4 py-2 rounded-xl text-teal-900 bg-teal-100 font-bold shadow-sm transition-all">
+                    <i data-lucide="presentation" class="w-4 h-4 text-teal-700"></i>
+                    <span>AI Ma'am Chalkboard</span>
+                    <span class="bg-emerald-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">SCIENCE & MATH</span>
+                </button>
+
+                <button onclick="switchTab('science-lab')" id="tab-btn-science-lab" class="tab-button flex items-center gap-2 px-4 py-2 rounded-xl text-slate-600 hover:text-teal-700 hover:bg-white transition-all">
+                    <i data-lucide="flask-conical" class="w-4 h-4 text-purple-600"></i>
+                    <span>Interactive Science Lab</span>
+                    <span class="bg-purple-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">LIVE DIAGRAMS</span>
+                </button>
+
+                <button onclick="switchTab('books')" id="tab-btn-books" class="tab-button flex items-center gap-2 px-4 py-2 rounded-xl text-slate-600 hover:text-teal-700 hover:bg-white transition-all">
+                    <i data-lucide="book-marked" class="w-4 h-4 text-amber-600"></i>
+                    <span>Full NCERT Books (6th-9th)</span>
+                </button>
+
+                <button onclick="switchTab('sample-papers')" id="tab-btn-sample-papers" class="tab-button flex items-center gap-2 px-4 py-2 rounded-xl text-slate-600 hover:text-teal-700 hover:bg-white transition-all">
+                    <i data-lucide="file-check-2" class="w-4 h-4"></i>
+                    <span>Sample Papers (4th-10th)</span>
+                </button>
+
+                <button onclick="switchTab('notes')" id="tab-btn-notes" class="tab-button flex items-center gap-2 px-4 py-2 rounded-xl text-slate-600 hover:text-teal-700 hover:bg-white transition-all">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    <span>Revision Notes</span>
+                </button>
+
+                <button onclick="switchTab('upcoming')" id="tab-btn-upcoming" class="tab-button flex items-center gap-2 px-4 py-2 rounded-xl text-slate-600 hover:text-teal-700 hover:bg-white transition-all">
+                    <i data-lucide="clock" class="w-4 h-4 text-amber-500"></i>
+                    <span>Upcoming Modules</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- SECTION 1: AI MA'AM CHALKBOARD CLASSROOM -->
+        <section id="section-ai-solver" class="tab-content space-y-6">
+            
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-teal-950 to-emerald-950 text-white p-6 sm:p-8 shadow-2xl">
+                <div class="relative z-10 max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-teal-500/20 text-teal-300 border border-teal-400/30 text-xs font-semibold mb-3">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i>
+                        <span>AI Ma'am Chalkboard • Science Experiments & Math Stick Method</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-4xl font-black tracking-tight text-white mb-2">
+                        NCERT Vigyan & Ganit AI Shikshak (एआई मैम)
+                    </h1>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-6">
+                        Ask any Science concept like <strong>Photosynthesis</strong>, <strong>Water Cycle</strong>, <strong>Cell Structure</strong>, or Math like <strong>4 + 3</strong>, <strong>12 / 3</strong>, <strong>Integers</strong>. AI Ma'am draws live animated chalk diagrams, tally sticks, and chemical equations with real Hindi speech!
+                    </p>
+
+                    <!-- Input Form -->
+                    <div class="bg-white/10 backdrop-blur-md p-2.5 rounded-2xl border border-white/20 shadow-2xl flex flex-col sm:flex-row gap-2">
+                        <div class="relative flex-1">
+                            <input type="text" id="solver-input" placeholder="e.g. Photosynthesis, Plant Cell, 4 + 3, 12 / 3, Motion" 
+                                class="w-full bg-white text-slate-900 placeholder-slate-400 font-semibold px-4 py-3.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-inner"
+                                onkeypress="if(event.key==='Enter') processMathQuery()">
+                            <button onclick="startVoiceInput()" class="absolute right-3 top-3 text-slate-400 hover:text-teal-600 transition-colors p-1" title="Voice Input (Hindi/English)">
+                                <i data-lucide="mic" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        <button onclick="processMathQuery()" class="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-bold px-6 py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95 shrink-0">
+                            <i data-lucide="pencil-line" class="w-5 h-5"></i>
+                            <span>Explain on Chalkboard</span>
+                        </button>
+                    </div>
+
+                    <!-- Preset Suggestions -->
+                    <div class="mt-4 flex items-center gap-2 flex-wrap text-xs text-teal-200">
+                        <span class="font-bold text-white/90">Quick Doubts:</span>
+                        <button onclick="setQuery('Photosynthesis')" class="px-2.5 py-1 rounded-lg bg-teal-500/30 hover:bg-teal-500/50 border border-teal-300/30 font-bold transition-all">🔬 Photosynthesis Diagram</button>
+                        <button onclick="setQuery('Plant Cell Structure')" class="px-2.5 py-1 rounded-lg bg-teal-500/30 hover:bg-teal-500/50 border border-teal-300/30 font-bold transition-all">🌿 Plant Cell</button>
+                        <button onclick="setQuery('4 + 3')" class="px-2.5 py-1 rounded-lg bg-amber-500/30 hover:bg-amber-500/50 border border-amber-300/30 font-bold transition-all">➕ Math: 4 + 3 (Tally Sticks)</button>
+                        <button onclick="setQuery('12 / 3')" class="px-2.5 py-1 rounded-lg bg-amber-500/30 hover:bg-amber-500/50 border border-amber-300/30 font-bold transition-all">➗ Division: 12 ÷ 3</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blackboard Canvas & Text Output Section -->
+            <div id="ai-solution-output" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left Column: Chalkboard Canvas -->
+                <div class="lg:col-span-8 bg-slate-900 text-white rounded-3xl p-4 sm:p-5 shadow-2xl border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <h3 class="font-bold text-slate-100 text-base">
+                                    NCERT Live Green Chalkboard (एआई मैम की ब्लैकबोर्ड कक्षा)
+                                </h3>
+                            </div>
+                            <span class="text-xs text-amber-300 bg-amber-950/90 px-3 py-1 rounded-full border border-amber-800/80 font-semibold flex items-center gap-1.5">
+                                <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> Hindi Voice Sync Active
+                            </span>
+                        </div>
+
+                        <!-- School Chalkboard Viewport -->
+                        <div class="relative w-full aspect-[16/9] bg-board-green rounded-2xl overflow-hidden chalkboard-frame flex flex-col justify-between shadow-2xl">
+                            
+                            <canvas id="chalkboard-canvas" class="w-full h-full object-contain cursor-crosshair"></canvas>
+
+                            <!-- Chalk Tray -->
+                            <div class="chalk-tray w-full flex items-center justify-end px-12 gap-3 relative z-10">
+                                <div class="w-10 h-2.5 bg-slate-100 rounded-sm rotate-3 shadow"></div>
+                                <div class="w-8 h-2.5 bg-yellow-200 rounded-sm -rotate-2 shadow"></div>
+                                <div class="w-12 h-3.5 bg-slate-700 rounded-sm shadow"></div>
+                            </div>
+
+                            <!-- Voice Wave Indicator -->
+                            <div id="voice-wave-container" class="absolute top-3 right-4 bg-slate-900/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-teal-500/40 hidden flex items-center gap-1.5 shadow-lg">
+                                <div class="w-1 bg-teal-400 rounded-full animate-wave-bar" style="animation-delay: 0.1s"></div>
+                                <div class="w-1 bg-teal-400 rounded-full animate-wave-bar" style="animation-delay: 0.3s"></div>
+                                <div class="w-1 bg-teal-400 rounded-full animate-wave-bar" style="animation-delay: 0.2s"></div>
+                                <div class="w-1 bg-teal-400 rounded-full animate-wave-bar" style="animation-delay: 0.4s"></div>
+                                <span class="text-xs text-teal-200 font-semibold ml-1">AI Ma'am Speaking...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Blackboard Controls -->
+                    <div class="mt-4 p-3.5 bg-slate-800/80 rounded-2xl border border-slate-700/80 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                            <span id="teacher-status-desc" class="font-medium">AI Ma'am is ready at the blackboard with chalk.</span>
+                        </div>
+                        <button onclick="replayChalkboardAnimation()" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Replay Chalk Explanation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Step-by-Step Transcript -->
+                <div class="lg:col-span-4 bg-white rounded-3xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+                            <div class="w-9 h-9 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center font-bold">
+                                <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-base">Concept Steps</h3>
+                                <p class="text-xs text-slate-500" id="output-query-subtitle">Lesson Notes</p>
+                            </div>
+                        </div>
+
+                        <!-- Answer Display Box -->
+                        <div class="mb-4 p-4 rounded-2xl bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] text-teal-800 font-black uppercase tracking-wider">Final Conclusion / मुख्य निष्कर्ष</span>
+                                <div class="text-xl font-black text-teal-900 font-ncert mt-0.5" id="final-answer-display">7</div>
+                            </div>
+                            <button onclick="copySolutionToClipboard()" class="p-2 text-teal-700 hover:bg-teal-100 rounded-xl transition-colors" title="Copy Answer">
+                                <i data-lucide="copy" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <div id="steps-container" class="space-y-2.5 font-medium text-slate-700 text-xs sm:text-sm max-h-80 overflow-y-auto custom-scrollbar pr-1">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <button onclick="triggerHindiMamSpeech()" class="mt-6 flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold text-xs transition-colors border border-teal-200 shadow-sm">
+                        <i data-lucide="volume-2" class="w-4 h-4 text-teal-600"></i>
+                        <span>Listen Hindi Voice Lesson</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- SECTION 2: INTERACTIVE SCIENCE LAB & KEY CONCEPTS -->
+        <section id="section-science-lab" class="tab-content hidden space-y-6">
+            <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-purple-800/40">
+                <div>
+                    <span class="bg-purple-500/30 text-purple-200 text-xs font-bold px-3 py-1 rounded-full border border-purple-400/30 uppercase tracking-wider mb-2 inline-block">NCERT Interactive Science Lab</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white">Visual Science Experiments & Diagrams</h2>
+                    <p class="text-purple-200 text-xs sm:text-sm max-w-xl">Interactive animated models for Photosynthesis, Plant Cell, Human Digestion, and Atom Structure from Classes 6th-9th Science.</p>
+                </div>
+                
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button onclick="loadLabModel('photosynthesis')" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl transition-all shadow">🌱 Photosynthesis</button>
+                    <button onclick="loadLabModel('cell')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all shadow">🔬 Plant Cell</button>
+                    <button onclick="loadLabModel('atom')" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold rounded-xl transition-all shadow">⚛️ Atom Structure</button>
+                    <button onclick="loadLabModel('force')" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl transition-all shadow">🧲 Force & Pressure</button>
+                </div>
+            </div>
+
+            <!-- Science Lab Display Window -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-8 bg-slate-950 rounded-2xl p-4 border border-slate-800 flex flex-col items-center justify-center min-h-[360px]" id="lab-canvas-container">
+                    <!-- SVG Interactive Model Injected Here -->
+                </div>
+                <div class="lg:col-span-4 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <span id="lab-model-badge" class="bg-purple-100 text-purple-800 font-extrabold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">Class 7 Science • Ch 1</span>
+                        <h3 id="lab-model-title" class="text-xl font-black text-slate-900 mt-2">Photosynthesis & Plant Stomata</h3>
+                        <p id="lab-model-desc" class="text-slate-600 text-xs sm:text-sm mt-2 leading-relaxed">Plants prepare glucose using Sunlight, CO2, Chlorophyll, and Water. Oxygen is released through stomata pores.</p>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200 text-xs font-semibold text-purple-900 space-y-2" id="lab-key-points">
+                        <p>• <strong>Chloroplast:</strong> Contains green pigment Chlorophyll.</p>
+                        <p>• <strong>Stomata:</strong> Tiny pores guarded by guard cells for gas exchange.</p>
+                        <p>• <strong>Chemical Equation:</strong> 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: FULL NCERT TEXTBOOKS (CLASSES 6, 7, 8, 9 - SCIENCE & MATHS) -->
+        <section id="section-books" class="tab-content hidden space-y-6">
+            
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="bg-gradient-to-r from-teal-600 to-emerald-600 text-white text-[10px] font-black px-3 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                            Official Full NCERT Textbooks
+                        </span>
+                        <span class="text-xs text-slate-500 font-semibold">Classes 6th to 9th • Complete Science & Mathematics</span>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900">NCERT Interactive Colourful Textbook Reader</h2>
+                    <p class="text-slate-500 text-xs sm:text-sm">Click any textbook to view Chapter Table of Contents, Full pages, Diagrams, Formulas & Exercises.</p>
+                </div>
+                
+                <!-- Filter Dropdowns -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <select id="book-class-filter" onchange="renderBooks()" class="bg-slate-100 border border-slate-200 text-slate-800 text-xs sm:text-sm rounded-xl px-3.5 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="all">All Classes (6th to 9th)</option>
+                        <option value="6" selected>Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                    </select>
+
+                    <select id="book-subject-filter" onchange="renderBooks()" class="bg-slate-100 border border-slate-200 text-slate-800 text-xs sm:text-sm rounded-xl px-3.5 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="all">All Subjects</option>
+                        <option value="Science">Science (विज्ञान)</option>
+                        <option value="Maths">Mathematics (गणित)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Books Cards Grid -->
+            <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Populated dynamically via JS -->
+            </div>
+
+        </section>
+
+        <!-- SECTION 4: SAMPLE PAPERS -->
+        <section id="section-sample-papers" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <div>
+                    <span class="bg-teal-100 text-teal-800 text-[10px] font-black px-3 py-0.5 rounded-full border border-teal-200 uppercase tracking-wider mb-1 inline-block">Classes 4th to 10th</span>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900">Official CBSE & NCERT Model Sample Papers</h2>
+                    <p class="text-slate-500 text-xs sm:text-sm">Practice question papers with step-by-step marking schemes for Science & Maths.</p>
+                </div>
+                <select id="sp-class-filter" onchange="renderSamplePapers()" class="bg-slate-100 border border-slate-200 text-slate-800 text-xs sm:text-sm rounded-xl px-3.5 py-2 font-bold focus:outline-none">
+                    <option value="all">All Classes (4th-10th)</option>
+                    <option value="4">Class 4</option>
+                    <option value="6">Class 6</option>
+                    <option value="7">Class 7</option>
+                    <option value="8">Class 8</option>
+                    <option value="9">Class 9</option>
+                    <option value="10" selected>Class 10</option>
+                </select>
+            </div>
+
+            <div id="sample-papers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- SECTION 5: REVISION NOTES -->
+        <section id="section-notes" class="tab-content hidden space-y-6">
+            <div class="flex items-center justify-between bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900">Quick Science & Math Revision Notes</h2>
+                    <p class="text-slate-500 text-xs sm:text-sm">Important formulas, key definitions, and exam cheat-sheets.</p>
+                </div>
+                <select id="notes-class-filter" onchange="renderNotes()" class="bg-slate-100 border border-slate-200 text-slate-800 text-xs sm:text-sm rounded-xl px-3 py-2 font-bold focus:outline-none">
+                    <option value="6">Class 6</option>
+                    <option value="7">Class 7</option>
+                    <option value="8">Class 8</option>
+                    <option value="9" selected>Class 9</option>
+                </select>
+            </div>
+            <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- SECTION 6: UPCOMING COURSES -->
+        <section id="section-upcoming" class="tab-content hidden space-y-6">
+            <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                    <span class="bg-black/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 inline-block">🚀 Launching Soon</span>
+                    <h2 class="text-2xl sm:text-3xl font-black mb-2">Primary (1st-4th) & Senior Secondary (10th-12th)</h2>
+                    <p class="text-amber-100 text-xs sm:text-sm max-w-xl">Interactive animated storybooks for primary grades & Board exam crash courses for 10th-12th Physics, Chemistry, Biology & Maths.</p>
+                </div>
+                <button onclick="openNotifyModal()" class="bg-white text-orange-600 hover:bg-orange-50 font-bold px-6 py-3.5 rounded-2xl text-xs sm:text-sm transition-all shadow-lg shrink-0 flex items-center gap-2">
+                    <i data-lucide="bell" class="w-4 h-4"></i> Get Launch Updates
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 1. TABLE OF CONTENTS MODAL -->
+    <div id="toc-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl relative border border-slate-200">
+            <button onclick="closeTocModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-2 rounded-full bg-slate-100">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-xl">
+                    <i data-lucide="list-ordered" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 id="toc-book-title" class="text-xl font-black text-slate-900">NCERT Book Title</h3>
+                    <p id="toc-book-subtitle" class="text-xs text-teal-600 font-bold uppercase tracking-wider">Table of Contents / विषय-सूची</p>
+                </div>
+            </div>
+
+            <div id="toc-chapters-container" class="space-y-2 max-h-80 overflow-y-auto custom-scrollbar my-4 pr-2">
+                <!-- Chapters Injected -->
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                <span class="text-xs text-slate-500 font-medium">Select a chapter or launch immersive reader</span>
+                <button onclick="launchFullscreenReader()" class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center gap-2 shadow-md">
+                    <i data-lucide="maximize" class="w-4 h-4"></i> Open Fullscreen Reader
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. FULLSCREEN INTERACTIVE BOOK READER -->
+    <div id="pdf-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-0 sm:p-4">
+        <div id="reader-container-box" class="bg-slate-900 w-full h-full sm:max-w-6xl sm:h-[94vh] sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-800 transition-all">
+            
+            <!-- Reader Top Header Bar -->
+            <div class="px-4 sm:px-6 py-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between text-white shrink-0 gap-2">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleBookTocDrawer()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-teal-400 transition-colors flex items-center gap-1.5 text-xs font-bold">
+                        <i data-lucide="list" class="w-4 h-4"></i> Chapters
+                    </button>
+                    <div>
+                        <h3 id="modal-book-title" class="font-extrabold text-xs sm:text-base text-white truncate max-w-xs sm:max-w-md">NCERT Textbook</h3>
+                        <p id="modal-book-subtitle" class="text-[10px] text-teal-400 font-medium hidden sm:block">Page-by-Page Interactive Reader</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <!-- Chapter Selector Dropdown -->
+                    <select id="reader-chapter-dropdown" onchange="selectReaderChapter(this.value)" class="bg-slate-800 border border-slate-700 text-xs font-bold text-teal-300 rounded-xl px-2.5 py-1.5 focus:outline-none max-w-[130px] sm:max-w-xs">
+                        <!-- Options injected dynamically -->
+                    </select>
+
+                    <button onclick="toggleBookmarkCurrentPage()" id="bookmark-btn" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 transition-colors hidden sm:block" title="Bookmark Page">
+                        <i data-lucide="bookmark" class="w-4 h-4"></i>
+                    </button>
+
+                    <button onclick="toggleDarkReadingMode()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors hidden sm:block" title="Toggle Dark/Light Mode">
+                        <i data-lucide="moon" class="w-4 h-4"></i>
+                    </button>
+
+                    <button onclick="toggleReaderFullscreen()" class="p-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white transition-colors" title="True Fullscreen View">
+                        <i data-lucide="expand" class="w-4 h-4"></i>
+                    </button>
+
+                    <button onclick="closePdfModal()" class="text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800 hover:bg-slate-700 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Reader Content Area -->
+            <div class="flex-1 flex overflow-hidden relative">
+                
+                <!-- Sidebar TOC Drawer -->
+                <div id="book-toc-drawer" class="w-64 sm:w-72 bg-slate-800 border-r border-slate-700 p-4 overflow-y-auto space-y-4 shrink-0 text-xs text-slate-300 custom-scrollbar absolute sm:relative z-20 h-full shadow-2xl sm:shadow-none hidden sm:block">
+                    <div>
+                        <h4 class="font-bold text-white text-xs mb-2 flex items-center gap-2">
+                            <i data-lucide="book-open" class="w-4 h-4 text-teal-400"></i> Chapters / अध्याय
+                        </h4>
+                        <div id="toc-chapters-list" class="space-y-1">
+                            <!-- Injected -->
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-700 pt-3">
+                        <h4 class="font-bold text-white text-xs mb-2 flex items-center gap-2">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-teal-400"></i> Chapter Pages
+                        </h4>
+                        <div id="toc-pages-list" class="space-y-1">
+                            <!-- Injected -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Viewport -->
+                <div id="reader-viewport" class="flex-1 bg-slate-950 p-3 sm:p-8 overflow-y-auto flex flex-col items-center custom-scrollbar">
+                    <div id="reader-page-card" class="w-full max-w-4xl bg-white text-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 transition-all font-ncert my-auto page-flip-anim">
+                        
+                        <!-- Page Top Header Ribbon -->
+                        <div id="page-banner-bg" class="bg-gradient-to-r from-teal-600 to-emerald-600 px-6 py-3.5 text-white flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider" id="book-header-class-tag">Class 7</span>
+                                <h3 id="book-header-subject-tag" class="font-extrabold text-xs sm:text-sm">Science - Official NCERT Textbook</h3>
+                            </div>
+                            <span id="reader-page-indicator" class="bg-black/30 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full">Page 1 of 5</span>
+                        </div>
+
+                        <!-- Dynamic Page Body -->
+                        <div id="pdf-modal-content-body" class="p-5 sm:p-10 space-y-6">
+                            <!-- Dynamic NCERT Content with Diagrams Injected -->
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Reader Bottom Controls Bar -->
+            <div class="px-6 py-3 bg-slate-900 border-t border-slate-800 flex items-center justify-between text-xs sm:text-sm font-bold text-white shrink-0">
+                <button onclick="changeReaderPage(-1)" id="btn-prev-page" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors flex items-center gap-1.5 text-slate-200 disabled:opacity-40">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i> Previous Page
+                </button>
+
+                <div class="flex items-center gap-3">
+                    <span id="reader-footer-pages" class="text-slate-400 font-mono">Page 1 / 5</span>
+                </div>
+
+                <button onclick="changeReaderPage(1)" id="btn-next-page" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors flex items-center gap-1.5 shadow-md shadow-teal-900/50">
+                    Next Page <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div id="notify-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl relative">
+            <button onclick="closeNotifyModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-4">
+                <i data-lucide="bell-ring" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-1">Subscribe for New Classes</h3>
+            <p class="text-xs text-slate-500 mb-4">Enter your mobile or email for updates on upcoming senior classes.</p>
+            <input type="text" id="notify-contact" placeholder="Mobile Number or Email..." class="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <button onclick="submitNotificationAlert()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl text-sm transition-all shadow">
+                Subscribe Free
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'hindi';
+        let speechSynthesisUtterance = null;
+        let canvasAnimationId = null;
+        let speechActive = false;
+        let currentExplanationData = null;
+
+        // Reader State
+        let readerCurrentPage = 1;
+        let readerTotalPages = 5;
+        let currentActiveBook = null;
+        let currentActiveChapterIndex = 0;
+        let readerDarkMode = false;
+        let bookmarkedPages = {};
+
+        // COMPREHENSIVE NCERT BOOKS DATA (Classes 6, 7, 8, 9 - Science & Maths)
+        const BOOKS_DATA = [
+            // CLASS 6 SCIENCE
+            { 
+                id: 601, classNum: "6", subject: "Science", titleHindi: "विज्ञान (कक्षा 6)", titleEng: "Science - Class 6", coverBg: "from-emerald-600 to-teal-800",
+                chapters: [
+                    { title: "Chapter 1: Components of Food / भोजन के घटक", pagesCount: 5 },
+                    { title: "Chapter 2: Sorting Materials / वस्तुओं के समूह बनाना", pagesCount: 5 },
+                    { title: "Chapter 3: Separation of Substances / पदार्थों का पृथक्करण", pagesCount: 5 },
+                    { title: "Chapter 4: Getting to Know Plants / पौधों को जानिए", pagesCount: 5 },
+                    { title: "Chapter 5: Body Movements / शरीर में गति", pagesCount: 5 }
+                ]
+            },
+            // CLASS 6 MATHS
+            { 
+                id: 602, classNum: "6", subject: "Maths", titleHindi: "गणित (कक्षा 6)", titleEng: "Mathematics - Class 6", coverBg: "from-blue-600 to-indigo-800",
+                chapters: [
+                    { title: "Chapter 1: Knowing Our Numbers / अपनी संख्याओं को जानना", pagesCount: 5 },
+                    { title: "Chapter 2: Whole Numbers / पूर्ण संख्याएँ", pagesCount: 5 },
+                    { title: "Chapter 3: Playing with Numbers / संख्याओं के साथ खेलना", pagesCount: 5 },
+                    { title: "Chapter 4: Integers / पूर्णांक", pagesCount: 5 }
+                ]
+            },
+            // CLASS 7 SCIENCE
+            { 
+                id: 701, classNum: "7", subject: "Science", titleHindi: "विज्ञान (कक्षा 7)", titleEng: "Science - Class 7", coverBg: "from-teal-600 to-emerald-900",
+                chapters: [
+                    { title: "Chapter 1: Nutrition in Plants / पादपों में पोषण (Photosynthesis)", pagesCount: 5 },
+                    { title: "Chapter 2: Nutrition in Animals / प्राणियों में पोषण", pagesCount: 5 },
+                    { title: "Chapter 3: Heat & Temperature / ऊष्मा एवं ताप", pagesCount: 5 },
+                    { title: "Chapter 4: Acids, Bases & Salts / अम्ल, क्षारक और लवण", pagesCount: 5 },
+                    { title: "Chapter 5: Physical & Chemical Changes / भौतिक एवं रासायनिक परिवर्तन", pagesCount: 5 }
+                ]
+            },
+            // CLASS 7 MATHS
+            { 
+                id: 702, classNum: "7", subject: "Maths", titleHindi: "गणित (कक्षा 7)", titleEng: "Mathematics - Class 7", coverBg: "from-indigo-600 to-purple-800",
+                chapters: [
+                    { title: "Chapter 1: Integers / पूर्णांक", pagesCount: 5 },
+                    { title: "Chapter 2: Fractions and Decimals / भिन्न एवं दशमलव", pagesCount: 5 },
+                    { title: "Chapter 3: Simple Equations / सरल समीकरण", pagesCount: 5 },
+                    { title: "Chapter 4: Lines and Angles / रेखाएँ एवं कोण", pagesCount: 5 }
+                ]
+            },
+            // CLASS 8 SCIENCE
+            { 
+                id: 801, classNum: "8", subject: "Science", titleHindi: "विज्ञान (कक्षा 8)", titleEng: "Science - Class 8", coverBg: "from-purple-700 to-indigo-900",
+                chapters: [
+                    { title: "Chapter 1: Crop Production & Management / फसल उत्पादन एवं प्रबंध", pagesCount: 5 },
+                    { title: "Chapter 2: Microorganisms: Friend & Foe / सूक्ष्मजीव: मित्र एवं शत्रु", pagesCount: 5 },
+                    { title: "Chapter 3: Coal & Petroleum / कोयला और पेट्रोलियम", pagesCount: 5 },
+                    { title: "Chapter 4: Force and Pressure / बल तथा दाब", pagesCount: 5 }
+                ]
+            },
+            // CLASS 8 MATHS
+            { 
+                id: 802, classNum: "8", subject: "Maths", titleHindi: "गणित (कक्षा 8)", titleEng: "Mathematics - Class 8", coverBg: "from-cyan-700 to-blue-900",
+                chapters: [
+                    { title: "Chapter 1: Rational Numbers / परिमेय संख्याएँ", pagesCount: 5 },
+                    { title: "Chapter 2: Linear Equations in One Variable / एक चर वाले रैखिक समीकरण", pagesCount: 5 },
+                    { title: "Chapter 3: Understanding Quadrilaterals / चतुर्भुजों को समझना", pagesCount: 5 }
+                ]
+            },
+            // CLASS 9 SCIENCE
+            { 
+                id: 901, classNum: "9", subject: "Science", titleHindi: "विज्ञान (कक्षा 9)", titleEng: "Science - Class 9", coverBg: "from-rose-700 to-pink-950",
+                chapters: [
+                    { title: "Chapter 1: Matter in Our Surroundings / हमारे आस-पास के पदार्थ", pagesCount: 5 },
+                    { title: "Chapter 2: Is Matter Around Us Pure? / क्या हमारे आस-पास के पदार्थ शुद्ध हैं?", pagesCount: 5 },
+                    { title: "Chapter 3: Atoms and Molecules / परमाणु एवं अणु", pagesCount: 5 },
+                    { title: "Chapter 4: The Fundamental Unit of Life: Cell / जीवन की मौलिक इकाई: कोशिका", pagesCount: 5 }
+                ]
+            },
+            // CLASS 9 MATHS
+            { 
+                id: 902, classNum: "9", subject: "Maths", titleHindi: "गणित (कक्षा 9)", titleEng: "Mathematics - Class 9", coverBg: "from-violet-700 to-purple-950",
+                chapters: [
+                    { title: "Chapter 1: Number Systems / संख्या पद्धति", pagesCount: 5 },
+                    { title: "Chapter 2: Polynomials / बहुपद", pagesCount: 5 },
+                    { title: "Chapter 3: Coordinate Geometry / निर्देशांक ज्यामिति", pagesCount: 5 }
+                ]
+            }
+        ];
+
+        // SAMPLE PAPERS & REVISION NOTES
+        const SAMPLE_PAPERS_DATA = [
+            { id: 1, classNum: "10", subject: "Science", title: "Class 10 Science Official CBSE Board Model Paper", duration: "3 Hours", totalMarks: "80 Marks" },
+            { id: 2, classNum: "10", subject: "Maths", title: "Class 10 Mathematics Standard Model Question Paper", duration: "3 Hours", totalMarks: "80 Marks" },
+            { id: 3, classNum: "9", subject: "Science", title: "Class 9 Science Term Exam Sample Paper", duration: "2.5 Hours", totalMarks: "80 Marks" },
+            { id: 4, classNum: "8", subject: "Maths", title: "Class 8 Mathematics Mid-Term Practice Paper", duration: "2 Hours", totalMarks: "60 Marks" },
+            { id: 5, classNum: "7", subject: "Science", title: "Class 7 Science Chapter Assessment Paper", duration: "1.5 Hours", totalMarks: "40 Marks" },
+            { id: 6, classNum: "6", subject: "Maths", title: "Class 6 Mathematics Joyful Practice Sheet", duration: "1 Hour", totalMarks: "30 Marks" }
+        ];
+
+        const NOTES_DATA = [
+            { id: 1, classNum: "9", subject: "Science", chapter: "Chapter 4: Cell (The Unit of Life)", points: ["Robert Hooke discovered cell in 1665.", "Mitochondria is the Powerhouse of the cell.", "Plant cells have rigid Cell Wall & Chloroplasts."] },
+            { id: 2, classNum: "9", subject: "Maths", chapter: "Chapter 2: Polynomials", points: ["Degree of linear polynomial = 1, Quadratic = 2.", "Factor Theorem: If P(a) = 0, then (x - a) is a factor."] },
+            { id: 3, classNum: "8", subject: "Science", chapter: "Chapter 4: Force and Pressure", points: ["Force = Mass × Acceleration (F = ma).", "Pressure = Force / Area (P = F/A). Unit: Pascal (Pa)."] }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderBooks();
+            renderSamplePapers();
+            renderNotes();
+            loadLabModel('photosynthesis');
+
+            // Default initial solution on chalkboard
+            setQuery("Photosynthesis");
+        });
+
+        /* TAB NAVIGATION */
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(el => {
+                el.classList.remove('bg-teal-100', 'text-teal-900', 'font-bold', 'shadow-sm');
+                el.classList.add('text-slate-600');
+            });
+
+            const activeTab = document.getElementById(`section-${tabId}`);
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            
+            if (activeTab && activeBtn) {
+                activeTab.classList.remove('hidden');
+                activeBtn.classList.add('bg-teal-100', 'text-teal-900', 'font-bold', 'shadow-sm');
+                activeBtn.classList.remove('text-slate-600');
+            }
+        }
+
+        function toggleGlobalLanguage() {
+            currentLang = currentLang === 'hindi' ? 'english' : 'hindi';
+            document.getElementById('current-lang-text').innerText = currentLang === 'hindi' ? 'Hindi (हिंदी)' : 'English';
+            renderBooks();
+        }
+
+        function setQuery(text) {
+            document.getElementById('solver-input').value = text;
+            processMathQuery();
+        }
+
+        function processMathQuery() {
+            const query = document.getElementById('solver-input').value.trim();
+            if (!query) return;
+
+            document.getElementById('output-query-subtitle').innerText = `Doubt: "${query}"`;
+
+            let steps = [];
+            let finalRes = "";
+            let hindiSpeechText = "";
+
+            const qLower = query.toLowerCase();
+
+            if (qLower.includes('photo') || qLower.includes('प्रकाश') || qLower.includes('leaf')) {
+                finalRes = "Glucose (C₆H₁₂O₆) + Oxygen (O₂)";
+                steps = [
+                    "QUESTION: What is Photosynthesis? (प्रकाश संश्लेषण क्या है?)",
+                    "STEP 1: Green leaves contain Chlorophyll pigment.",
+                    "STEP 2: Sunlight rays energy is absorbed by chlorophyll.",
+                    "STEP 3: CO₂ from air enters stomata pores; H₂O absorbed by roots.",
+                    "EQUATION: 6CO₂ + 6H₂O + Sunlight → C₆H₁₂O₆ + 6O₂"
+                ];
+                hindiSpeechText = "नमस्ते प्यारे बच्चों! प्रकाश संश्लेषण वह अद्भुत प्रक्रिया है जिसके द्वारा हरे पौधे सूर्य के प्रकाश, कार्बन डाइऑक्साइड और जल की मदद से अपना भोजन ग्लूकोज बनाते हैं और ऑक्सीजन गैस छोड़ते हैं।";
+                currentExplanationData = { type: 'photosynthesis', rawQ: "Photosynthesis Diagram" };
+
+            } else if (qLower.includes('cell') || qLower.includes('कोशिका')) {
+                finalRes = "Cell Wall, Membrane, Nucleus & Chloroplast";
+                steps = [
+                    "QUESTION: Structure of Plant Cell (पादप कोशिका की संरचना)",
+                    "STEP 1: Outer rigid protective layer is Cell Wall (सेल वॉल).",
+                    "STEP 2: Central control hub is Nucleus (केंद्रक).",
+                    "STEP 3: Powerhouse organelle is Mitochondria.",
+                    "STEP 4: Green organelle for photosynthesis is Chloroplast."
+                ];
+                hindiSpeechText = "बच्चों, कोशिका जीवन की मूलभूत इकाई है। पादप कोशिका में एक मजबूत कोशिका भित्ति, केंद्रक, और हरे रंग का क्लोरोप्लास्ट पाया जाता है।";
+                currentExplanationData = { type: 'cell', rawQ: "Plant Cell Structure" };
+
+            } else if (query.includes('+')) {
+                const parts = query.split('+').map(p => parseFloat(p.trim()));
+                if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                    const a = parts[0], b = parts[1];
+                    finalRes = (a + b).toString();
+                    steps = [
+                        `QUESTION: ${a} + ${b} का मान निकालें।`,
+                        `STEP 1 (Visual Tally): Draw ${a} tally sticks (| | | |).`,
+                        `STEP 2: Draw ${b} more tally sticks.`,
+                        `STEP 3: Count all sticks together = ${finalRes} sticks!`,
+                        `FINAL ANSWER: ${a} + ${b} = ${finalRes}`
+                    ];
+                    hindiSpeechText = `बच्चों! ${a} जमा ${b} के लिए हम पहले ${a} डंडियां खींचते हैं, फिर ${b} डंडियां। सब मिलाकर कुल ${finalRes} डंडियां बनती हैं!`;
+                    currentExplanationData = { type: 'add_tally', a, b, op: '+', result: finalRes, rawQ: `${a} + ${b}` };
+                }
+            } else if (query.includes('/')) {
+                const parts = query.split('/').map(p => parseFloat(p.trim()));
+                if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                    const a = parts[0], b = parts[1];
+                    finalRes = (a / b).toString();
+                    steps = [
+                        `QUESTION: Divide ${a} ÷ ${b} (भाग दें)`,
+                        `STEP 1: Divide ${a} items into ${b} equal groups.`,
+                        `STEP 2: Each group gets exactly ${finalRes} items.`,
+                        `FINAL ANSWER: ${a} ÷ ${b} = ${finalRes}`
+                    ];
+                    hindiSpeechText = `नमस्ते बच्चों! ${a} को ${b} बराबर भागों में बांटने पर हर भाग में ठीक ${finalRes} आएगा।`;
+                    currentExplanationData = { type: 'div_group', a, b, op: '÷', result: finalRes, rawQ: `${a} ÷ ${b}` };
+                }
+            } else {
+                finalRes = "Solution & Reaction Complete";
+                steps = [
+                    `QUESTION: Explanation for "${query}"`,
+                    "STEP 1: Observe primary principles and formulas.",
+                    "STEP 2: Apply step-by-step NCERT textbook logic.",
+                    "FINAL ANSWER: Concept explained on chalkboard."
+                ];
+                hindiSpeechText = `नमस्ते बच्चों! ब्लैडबोर्ड पर ${query} की संपूर्ण व्याख्या देखिए।`;
+                currentExplanationData = { type: 'general', rawQ: query, result: "Explained" };
+            }
+
+            document.getElementById('final-answer-display').innerText = finalRes;
+            document.getElementById('steps-container').innerHTML = steps.map((s, idx) => `
+                <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <span class="w-5 h-5 rounded-full bg-teal-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                    <p class="text-slate-800 font-medium">${s}</p>
+                </div>
+            `).join('');
+
+            startChalkboardMamAnimation(hindiSpeechText);
+        }
+
+        function startChalkboardMamAnimation(speechText) {
+            renderAIClassroomCanvas();
+            speakHindiMamSpeech(speechText);
+        }
+
+        function renderAIClassroomCanvas() {
+            const canvas = document.getElementById('chalkboard-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 900;
+            canvas.height = 500;
+
+            if (canvasAnimationId) cancelAnimationFrame(canvasAnimationId);
+
+            let frame = 0;
+            const data = currentExplanationData;
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // 1. Green Chalkboard
+                ctx.fillStyle = '#0d331e';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Grid Lines
+                ctx.strokeStyle = '#14452a';
+                ctx.lineWidth = 1;
+                for (let y = 0; y < canvas.height; y += 32) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+                }
+
+                ctx.fillStyle = '#a7f3d0';
+                ctx.font = '22px Kalam, cursive';
+                ctx.fillText('NCERT Vigyan & Ganit AI Shikshak (एआई मैम कक्षा)', 280, 40);
+
+                // 2. Animated Chalk Content based on Query Type
+                ctx.font = '24px Kalam, cursive';
+
+                if (data.type === 'photosynthesis') {
+                    // Photosynthesis Chalk Diagram
+                    if (frame > 15) {
+                        ctx.fillStyle = '#fef08a';
+                        ctx.fillText('PHOTOSYNTHESIS (प्रकाश संश्लेषण)', 280, 85);
+                    }
+
+                    // Draw Sun
+                    if (frame > 25) {
+                        ctx.fillStyle = '#fde047';
+                        ctx.beginPath(); ctx.arc(330, 160, 28, 0, Math.PI * 2); ctx.fill();
+                        ctx.strokeStyle = '#fde047'; ctx.lineWidth = 2;
+                        for (let i = 0; i < 8; i++) {
+                            const ang = (i * Math.PI) / 4;
+                            ctx.beginPath();
+                            ctx.moveTo(330 + Math.cos(ang) * 32, 160 + Math.sin(ang) * 32);
+                            ctx.lineTo(330 + Math.cos(ang) * 44, 160 + Math.sin(ang) * 44);
+                            ctx.stroke();
+                        }
+                    }
+
+                    // Sunlight Rays to Leaf
+                    if (frame > 40) {
+                        ctx.strokeStyle = '#fef08a';
+                        ctx.setLineDash([4, 4]);
+                        ctx.beginPath(); ctx.moveTo(360, 175); ctx.lineTo(480, 240); ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.fillStyle = '#fef08a';
+                        ctx.font = '16px Kalam, cursive';
+                        ctx.fillText('Sunlight Rays', 390, 195);
+                    }
+
+                    // Green Leaf Outline
+                    if (frame > 55) {
+                        ctx.fillStyle = '#22c55e';
+                        ctx.beginPath();
+                        ctx.ellipse(540, 270, 70, 35, Math.PI / 6, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillText('Green Leaf (Chlorophyll)', 470, 330);
+                    }
+
+                    // Chemical Equation
+                    if (frame > 85) {
+                        ctx.fillStyle = '#6ee7b7';
+                        ctx.font = 'bold 26px Kalam, cursive';
+                        ctx.fillText('6CO₂  +  6H₂O  +  Light  ➔  C₆H₁₂O₆  +  6O₂', 280, 410);
+                    }
+
+                } else if (data.type === 'cell') {
+                    // Plant Cell Chalk Diagram
+                    if (frame > 15) {
+                        ctx.fillStyle = '#fef08a';
+                        ctx.fillText('PLANT CELL STRUCTURE (पादप कोशिका)', 280, 85);
+                    }
+
+                    if (frame > 30) {
+                        ctx.strokeStyle = '#22c55e'; ctx.lineWidth = 5;
+                        ctx.strokeRect(320, 130, 240, 180); // Cell Wall
+                        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
+                        ctx.strokeRect(328, 138, 224, 164); // Membrane
+                    }
+
+                    if (frame > 50) {
+                        // Nucleus
+                        ctx.fillStyle = '#f43f5e';
+                        ctx.beginPath(); ctx.arc(440, 220, 28, 0, Math.PI * 2); ctx.fill();
+                        ctx.fillStyle = '#ffffff'; ctx.font = '16px Kalam, cursive';
+                        ctx.fillText('Nucleus', 415, 225);
+                    }
+
+                    if (frame > 75) {
+                        ctx.fillStyle = '#6ee7b7'; ctx.font = '22px Kalam, cursive';
+                        ctx.fillText('Cell Wall • Membrane • Nucleus • Chloroplast', 280, 370);
+                    }
+
+                } else if (data.type === 'add_tally') {
+                    // Tally Sticks Addition
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 32px Kalam, cursive';
+                    if (frame > 20) ctx.fillText(`${data.a}`, 280, 150);
+
+                    const numA = Math.min(8, parseInt(data.a) || 4);
+                    if (frame > 30) {
+                        ctx.strokeStyle = '#6ee7b7'; ctx.lineWidth = 4;
+                        for (let i = 0; i < numA; i++) {
+                            const sx = 320 + (i * 20);
+                            ctx.beginPath(); ctx.moveTo(sx, 125); ctx.lineTo(sx, 160); ctx.stroke();
+                        }
+                    }
+
+                    if (frame > 50) {
+                        ctx.fillStyle = '#fef08a'; ctx.fillText('+', 500, 150);
+                        ctx.fillStyle = '#ffffff'; ctx.fillText(`${data.b}`, 540, 150);
+                    }
+
+                    const numB = Math.min(8, parseInt(data.b) || 3);
+                    if (frame > 65) {
+                        ctx.strokeStyle = '#fef08a'; ctx.lineWidth = 4;
+                        for (let j = 0; j < numB; j++) {
+                            const sx = 580 + (j * 20);
+                            ctx.beginPath(); ctx.moveTo(sx, 125); ctx.lineTo(sx, 160); ctx.stroke();
+                        }
+                    }
+
+                    if (frame > 85) {
+                        ctx.fillStyle = '#6ee7b7'; ctx.font = 'bold 36px Kalam, cursive';
+                        ctx.fillText(`TOTAL = ${data.result} STICKS!`, 280, 240);
+                    }
+
+                } else {
+                    if (frame > 30) {
+                        ctx.fillStyle = '#ffffff'; ctx.font = 'bold 32px Kalam, cursive';
+                        ctx.fillText(`EXPLANATION FOR: ${data.rawQ}`, 280, 160);
+                    }
+                    if (frame > 70) {
+                        ctx.fillStyle = '#6ee7b7'; ctx.font = 'bold 38px Kalam, cursive';
+                        ctx.fillText(`RESULT = ${data.result}`, 280, 250);
+                    }
+                }
+
+                // 3. AI Ma'am (Teacher Character Drawing)
+                const mamX = 130;
+                const mamY = 320;
+                const bodySway = Math.sin(frame * 0.08) * 2;
+                const headBob = Math.sin(frame * 0.12) * 3;
+
+                // Teal Suit Outfit
+                ctx.fillStyle = '#0f766e';
+                ctx.beginPath();
+                ctx.moveTo(mamX - 50 + bodySway, mamY + 180);
+                ctx.lineTo(mamX - 25 + bodySway, mamY + 20);
+                ctx.lineTo(mamX + 25 + bodySway, mamY + 20);
+                ctx.lineTo(mamX + 50 + bodySway, mamY + 180);
+                ctx.closePath(); ctx.fill();
+
+                // Yellow Saree Dupatta
+                ctx.fillStyle = '#f59e0b';
+                ctx.beginPath();
+                ctx.moveTo(mamX - 25 + bodySway, mamY + 20);
+                ctx.lineTo(mamX + 15 + bodySway, mamY + 180);
+                ctx.lineTo(mamX + 35 + bodySway, mamY + 180);
+                ctx.lineTo(mamX + 5 + bodySway, mamY + 20);
+                ctx.closePath(); ctx.fill();
+
+                // Head
+                ctx.fillStyle = '#fed7aa';
+                ctx.beginPath(); ctx.arc(mamX + bodySway, mamY - 40 + headBob, 32, 0, Math.PI * 2); ctx.fill();
+
+                // Hair
+                ctx.fillStyle = '#1e293b';
+                ctx.beginPath(); ctx.arc(mamX + bodySway, mamY - 55 + headBob, 36, Math.PI, Math.PI * 2); ctx.fill();
+
+                // Glasses
+                ctx.strokeStyle = '#d97706'; ctx.lineWidth = 2.5;
+                ctx.strokeRect(mamX - 20 + bodySway, mamY - 46 + headBob, 15, 11);
+                ctx.strokeRect(mamX + 5 + bodySway, mamY - 46 + headBob, 15, 11);
+
+                // Eyes
+                ctx.fillStyle = '#0f172a';
+                if (Math.floor(frame / 25) % 9 !== 0) {
+                    ctx.beginPath(); ctx.arc(mamX - 12 + bodySway, mamY - 40 + headBob, 3, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(mamX + 12 + bodySway, mamY - 40 + headBob, 3, 0, Math.PI * 2); ctx.fill();
+                }
+
+                // Mouth Sync
+                ctx.fillStyle = '#f43f5e';
+                const mouthOpen = speechActive ? (Math.sin(frame * 0.4) * 4 + 3) : 2;
+                ctx.beginPath();
+                ctx.ellipse(mamX + bodySway, mamY - 22 + headBob, 6, mouthOpen, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Arm holding Chalk
+                let handX = mamX + 40;
+                let handY = mamY + 20;
+
+                if (frame < 100) {
+                    handX = mamX + 40 + (frame * 3.8);
+                    handY = mamY - 50 + Math.sin(frame * 0.3) * 25;
+                } else {
+                    handX = mamX + 180;
+                    handY = mamY + 20 + Math.sin(frame * 0.05) * 6;
+                }
+
+                ctx.strokeStyle = '#fed7aa'; ctx.lineWidth = 10;
+                ctx.beginPath(); ctx.moveTo(mamX + 30 + bodySway, mamY + 30);
+                ctx.lineTo(handX - 15, handY + 10);
+                ctx.lineTo(handX, handY); ctx.stroke();
+
+                // Hand & Chalk Stick
+                ctx.fillStyle = '#fed7aa'; ctx.beginPath(); ctx.arc(handX, handY, 8, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#ffffff'; ctx.fillRect(handX + 4, handY - 4, 16, 6);
+
+                if (frame < 130) {
+                    frame++;
+                    canvasAnimationId = requestAnimationFrame(animate);
+                }
+            }
+
+            animate();
+        }
+
+        function speakHindiMamSpeech(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            speechSynthesisUtterance = new SpeechSynthesisUtterance(text);
+            speechSynthesisUtterance.lang = 'hi-IN';
+            speechSynthesisUtterance.rate = 0.92;
+
+            const wave = document.getElementById('voice-wave-container');
+            const desc = document.getElementById('teacher-status-desc');
+
+            speechSynthesisUtterance.onstart = () => {
+                speechActive = true;
+                if (wave) wave.classList.remove('hidden');
+                if (desc) desc.innerText = "AI Ma'am is explaining live in Hindi...";
+            };
+
+            speechSynthesisUtterance.onend = () => {
+                speechActive = false;
+                if (wave) wave.classList.add('hidden');
+                if (desc) desc.innerText = "Explanation finished. Click 'Replay' to watch again.";
+            };
+
+            window.speechSynthesis.speak(speechSynthesisUtterance);
+        }
+
+        function triggerHindiMamSpeech() {
+            if (currentExplanationData) {
+                const ans = document.getElementById('final-answer-display').innerText;
+                speakHindiMamSpeech(`बच्चों, इसका सही उत्तर है ${ans}।`);
+            }
+        }
+
+        function replayChalkboardAnimation() {
+            processMathQuery();
+        }
+
+        function loadLabModel(modelType) {
+            const container = document.getElementById('lab-canvas-container');
+            const title = document.getElementById('lab-model-title');
+            const desc = document.getElementById('lab-model-desc');
+            const keyPoints = document.getElementById('lab-key-points');
+            const badge = document.getElementById('lab-model-badge');
+
+            if (modelType === 'photosynthesis') {
+                badge.innerText = "Class 7 Science • Chapter 1";
+                title.innerText = "Photosynthesis & Leaf Chloroplasts";
+                desc.innerText = "Chlorophyll inside leaves absorbs sunlight energy to convert CO2 and Water into Glucose food and release Oxygen gas.";
+                keyPoints.innerHTML = `
+                    <p>• <strong>Equation:</strong> 6CO₂ + 6H₂O + Sunlight → C₆H₁₂O₆ + 6O₂</p>
+                    <p>• <strong>Stomata:</strong> Guard cells regulate gas exchange.</p>
+                    <p>• <strong>Chlorophyll:</strong> Green pigment absorbing light energy.</p>
+                `;
+                container.innerHTML = `
+                    <svg class="w-full h-80" viewBox="0 0 500 300">
+                        <circle cx="90" cy="70" r="35" fill="#fde047" />
+                        <path d="M 90 70 L 220 150" stroke="#fde047" stroke-width="3" stroke-dasharray="6,6" />
+                        <text x="110" y="100" fill="#fde047" font-size="12" font-weight="bold">Sunlight Rays</text>
+
+                        <!-- Leaf -->
+                        <path d="M 180 180 C 240 100, 360 100, 420 180 C 360 260, 240 260, 180 180 Z" fill="#22c55e" stroke="#15803d" stroke-width="4" />
+                        <path d="M 180 180 Q 300 180 420 180" stroke="#15803d" stroke-width="3" />
+
+                        <text x="270" y="150" fill="white" font-size="14" font-weight="bold">CO₂ Inflow</text>
+                        <text x="270" y="220" fill="#6ee7b7" font-size="14" font-weight="bold">O₂ Released</text>
+                    </svg>
+                `;
+            } else if (modelType === 'cell') {
+                badge.innerText = "Class 9 Science • Chapter 4";
+                title.innerText = "Plant Cell Structural Diagram";
+                desc.innerText = "Plant cell with rigid cell wall, central nucleus, vacuole, powerhouse mitochondria, and photosynthetic chloroplasts.";
+                keyPoints.innerHTML = `
+                    <p>• <strong>Cell Wall:</strong> Rigid cellulose protection.</p>
+                    <p>• <strong>Nucleus:</strong> Controls cell heredity & activities.</p>
+                    <p>• <strong>Vacuole:</strong> Large central water storage space.</p>
+                `;
+                container.innerHTML = `
+                    <svg class="w-full h-80" viewBox="0 0 500 300">
+                        <rect x="100" y="40" width="300" height="220" rx="20" fill="#065f46" stroke="#22c55e" stroke-width="8" />
+                        <rect x="115" y="55" width="270" height="190" rx="15" fill="#047857" stroke="#6ee7b7" stroke-width="3" />
+                        
+                        <!-- Nucleus -->
+                        <circle cx="200" cy="150" r="35" fill="#e11d48" />
+                        <text x="200" y="155" fill="white" font-size="11" font-weight="bold" text-anchor="middle">Nucleus</text>
+
+                        <!-- Vacuole -->
+                        <rect x="270" y="90" width="90" height="120" rx="12" fill="#0284c7" opacity="0.8" />
+                        <text x="315" y="155" fill="white" font-size="11" font-weight="bold" text-anchor="middle">Vacuole</text>
+                    </svg>
+                `;
+            } else if (modelType === 'atom') {
+                badge.innerText = "Class 9 Science • Chapter 3";
+                title.innerText = "Bohr Model of Atom Structure";
+                desc.innerText = "Atom consisting of central Nucleus (Protons + Neutrons) surrounded by orbiting Electrons in discrete shells.";
+                keyPoints.innerHTML = `
+                    <p>• <strong>Protons (+):</strong> Positive charge in nucleus.</p>
+                    <p>• <strong>Neutrons (0):</strong> Neutral charge in nucleus.</p>
+                    <p>• <strong>Electrons (-):</strong> Negative particles orbiting in K, L, M shells.</p>
+                `;
+                container.innerHTML = `
+                    <svg class="w-full h-80" viewBox="0 0 500 300">
+                        <!-- Orbits -->
+                        <ellipse cx="250" cy="150" rx="180" ry="70" fill="none" stroke="#38bdf8" stroke-width="2" />
+                        <ellipse cx="250" cy="150" rx="70" ry="180" fill="none" stroke="#38bdf8" stroke-width="2" />
+
+                        <!-- Nucleus -->
+                        <circle cx="250" cy="150" r="28" fill="#f59e0b" />
+                        <text x="250" y="154" fill="white" font-size="10" font-weight="bold" text-anchor="middle">p+ & n0</text>
+
+                        <!-- Electrons -->
+                        <circle cx="430" cy="150" r="8" fill="#e11d48" />
+                        <circle cx="250" cy="330" r="8" fill="#e11d48" />
+                    </svg>
+                `;
+            } else {
+                badge.innerText = "Class 8 Science • Chapter 4";
+                title.innerText = "Force & Pressure Principles";
+                desc.innerText = "Pressure is force per unit area. Smaller area creates larger pressure (e.g. sharp nail vs blunt object).";
+                keyPoints.innerHTML = `
+                    <p>• <strong>Formula:</strong> Pressure (P) = Force (F) / Area (A)</p>
+                    <p>• <strong>S.I. Unit:</strong> Pascal (Pa) or N/m²</p>
+                `;
+                container.innerHTML = `
+                    <svg class="w-full h-80" viewBox="0 0 500 300">
+                        <rect x="150" y="180" width="200" height="40" fill="#475569" />
+                        <path d="M 230 60 L 270 60 L 270 140 L 250 180 L 230 140 Z" fill="#f59e0b" />
+                        <text x="250" y="45" fill="white" font-size="14" font-weight="bold" text-anchor="middle">Force Downward (F)</text>
+                    </svg>
+                `;
+            }
+        }
+
+        function renderBooks() {
+            const classFilter = document.getElementById('book-class-filter').value;
+            const subjectFilter = document.getElementById('book-subject-filter').value;
+            const container = document.getElementById('books-grid');
+
+            const filtered = BOOKS_DATA.filter(b => {
+                const matchesClass = (classFilter === 'all' || b.classNum === classFilter);
+                const matchesSubject = (subjectFilter === 'all' || b.subject === subjectFilter);
+                return matchesClass && matchesSubject;
+            });
+
+            container.innerHTML = filtered.map(b => `
+                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group">
+                    <div class="p-6 bg-gradient-to-br ${b.coverBg} text-white relative">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-black/30 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider">Class ${b.classNum}</span>
+                            <span class="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">${b.chapters.length} Chapters</span>
+                        </div>
+                        <h3 class="text-2xl font-black mt-2 mb-1">${currentLang === 'hindi' ? b.titleHindi : b.titleEng}</h3>
+                        <p class="text-xs text-white/90 font-semibold truncate">${b.chapters[0].title}</p>
+                    </div>
+                    <div class="p-5 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <span class="text-xs font-bold text-slate-600 bg-slate-200/70 px-3 py-1 rounded-lg">${b.subject}</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openTocModal('${b.id}')" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold transition-all flex items-center gap-1">
+                                <i data-lucide="list" class="w-3.5 h-3.5"></i> Contents
+                            </button>
+                            <button onclick="openPdfModal('${b.id}')" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition-all shadow-md shadow-teal-200 flex items-center gap-1.5">
+                                <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Read
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        /* TABLE OF CONTENTS MODAL LOGIC */
+        function openTocModal(bookId) {
+            const book = BOOKS_DATA.find(b => b.id == bookId);
+            if (!book) return;
+
+            currentActiveBook = book;
+            document.getElementById('toc-book-title').innerText = currentLang === 'hindi' ? book.titleHindi : book.titleEng;
+
+            const container = document.getElementById('toc-chapters-container');
+            container.innerHTML = book.chapters.map((ch, idx) => `
+                <div onclick="selectTocChapter(${idx})" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-teal-50 border border-slate-200 hover:border-teal-300 cursor-pointer transition-all flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-7 h-7 rounded-xl bg-teal-600 text-white font-bold text-xs flex items-center justify-center shrink-0">${idx + 1}</span>
+                        <span class="font-bold text-slate-800 text-xs sm:text-sm">${ch.title}</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-teal-600"></i>
+                </div>
+            `).join('');
+
+            document.getElementById('toc-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeTocModal() {
+            document.getElementById('toc-modal').classList.add('hidden');
+        }
+
+        function selectTocChapter(chIndex) {
+            closeTocModal();
+            openPdfModal(currentActiveBook.id, chIndex);
+        }
+
+        function launchFullscreenReader() {
+            closeTocModal();
+            openPdfModal(currentActiveBook.id, 0);
+        }
+
+        /* FULLSCREEN READER LOGIC */
+        function openPdfModal(bookId, startChapterIdx = 0) {
+            const book = BOOKS_DATA.find(b => b.id == bookId);
+            if (!book) return;
+
+            currentActiveBook = book;
+            currentActiveChapterIndex = startChapterIdx;
+            readerCurrentPage = 1;
+            readerTotalPages = book.chapters[startChapterIdx].pagesCount || 5;
+
+            document.getElementById('modal-book-title').innerText = currentLang === 'hindi' ? book.titleHindi : book.titleEng;
+            document.getElementById('book-header-class-tag').innerText = `Class ${book.classNum}`;
+            document.getElementById('book-header-subject-tag').innerText = `${book.subject} - NCERT Official Reader`;
+
+            const chapterSelect = document.getElementById('reader-chapter-dropdown');
+            chapterSelect.innerHTML = book.chapters.map((c, idx) => `
+                <option value="${idx}" ${idx === startChapterIdx ? 'selected' : ''}>${c.title}</option>
+            `).join('');
+
+            updateTocSidebar();
+            updateReaderPageContent();
+
+            document.getElementById('pdf-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function selectReaderChapter(chIndex) {
+            currentActiveChapterIndex = parseInt(chIndex);
+            readerCurrentPage = 1;
+            readerTotalPages = currentActiveBook.chapters[currentActiveChapterIndex].pagesCount || 5;
+            updateTocSidebar();
+            updateReaderPageContent();
+        }
+
+        function updateTocSidebar() {
+            const book = currentActiveBook;
+            const chContainer = document.getElementById('toc-chapters-list');
+            const pageContainer = document.getElementById('toc-pages-list');
+
+            chContainer.innerHTML = book.chapters.map((ch, idx) => `
+                <button onclick="selectReaderChapter(${idx})" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-colors ${idx === currentActiveChapterIndex ? 'bg-teal-600 text-white' : 'hover:bg-slate-700 text-slate-300'}">
+                    ${ch.title}
+                </button>
+            `).join('');
+
+            let pagesHtml = '';
+            for (let i = 1; i <= readerTotalPages; i++) {
+                pagesHtml += `
+                    <button onclick="jumpToReaderPage(${i})" class="w-full text-left px-3 py-1.5 rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-between font-medium ${i === readerCurrentPage ? 'text-teal-400 font-bold' : ''}">
+                        <span>Page ${i}</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+                    </button>
+                `;
+            }
+            pageContainer.innerHTML = pagesHtml;
+            lucide.createIcons();
+        }
+
+        function closePdfModal() {
+            document.getElementById('pdf-modal').classList.add('hidden');
+        }
+
+        function toggleBookTocDrawer() {
+            const drawer = document.getElementById('book-toc-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        function jumpToReaderPage(pageNum) {
+            readerCurrentPage = pageNum;
+            updateReaderPageContent();
+            updateTocSidebar();
+        }
+
+        function changeReaderPage(delta) {
+            const newPage = readerCurrentPage + delta;
+            if (newPage >= 1 && newPage <= readerTotalPages) {
+                readerCurrentPage = newPage;
+                updateReaderPageContent();
+                updateTocSidebar();
+            }
+        }
+
+        function toggleDarkReadingMode() {
+            readerDarkMode = !readerDarkMode;
+            const card = document.getElementById('reader-page-card');
+            if (readerDarkMode) card.classList.add('dark-reader-mode');
+            else card.classList.remove('dark-reader-mode');
+        }
+
+        function toggleReaderFullscreen() {
+            const elem = document.getElementById('reader-container-box');
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen().catch(err => alert("Fullscreen disabled in iframe"));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function toggleBookmarkCurrentPage() {
+            const key = `${currentActiveBook.id}-${currentActiveChapterIndex}-${readerCurrentPage}`;
+            bookmarkedPages[key] = !bookmarkedPages[key];
+            const btn = document.getElementById('bookmark-btn');
+            if (bookmarkedPages[key]) {
+                btn.classList.add('bg-amber-500', 'text-white');
+            } else {
+                btn.classList.remove('bg-amber-500', 'text-white');
+            }
+        }
+
+        function updateReaderPageContent() {
+            document.getElementById('reader-page-indicator').innerText = `Page ${readerCurrentPage} of ${readerTotalPages}`;
+            document.getElementById('reader-footer-pages').innerText = `Page ${readerCurrentPage} / ${readerTotalPages}`;
+
+            const body = document.getElementById('pdf-modal-content-body');
+            const card = document.getElementById('reader-page-card');
+            
+            // Trigger animation
+            card.classList.remove('page-flip-anim');
+            void card.offsetWidth;
+            card.classList.add('page-flip-anim');
+
+            const activeChapter = currentActiveBook.chapters[currentActiveChapterIndex];
+
+            let pageHtml = '';
+
+            if (readerCurrentPage === 1) {
+                pageHtml = `
+                    <div class="border-b border-slate-200 pb-4">
+                        <span class="text-xs font-black text-teal-600 uppercase tracking-widest">CHAPTER INTRODUCTION • PAGE 1</span>
+                        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">${activeChapter.title}</h1>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-gradient-to-r from-amber-100 via-orange-100 to-amber-200 border border-amber-300 shadow-sm flex flex-col sm:flex-row items-center gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black text-2xl shrink-0">
+                            💡
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-amber-900 text-sm mb-1">NCERT Warm-up Activity & Learning Objectives</h3>
+                            <p class="text-xs text-amber-800 leading-relaxed">
+                                Observe your surroundings and list key observations related to this topic before proceeding.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+                        <h4 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-teal-600"></i> Core Concepts Covered
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-bold text-slate-700">
+                            <div class="p-2.5 bg-white rounded-xl border border-slate-200">1. Fundamental Definitions</div>
+                            <div class="p-2.5 bg-white rounded-xl border border-slate-200">2. Key Diagrams & Illustrations</div>
+                            <div class="p-2.5 bg-white rounded-xl border border-slate-200">3. Solved NCERT Examples</div>
+                            <div class="p-2.5 bg-white rounded-xl border border-slate-200">4. Exercise Questions</div>
+                        </div>
+                    </div>
+                `;
+            } else if (readerCurrentPage === 2) {
+                pageHtml = `
+                    <div class="border-b border-slate-200 pb-4">
+                        <span class="text-xs font-black text-teal-600 uppercase tracking-widest">DETAILED DIAGRAMS & CONCEPTS • PAGE 2</span>
+                        <h2 class="text-2xl font-black text-slate-900 mt-1">Key Principles & Illustrations</h2>
+                    </div>
+
+                    <div class="p-6 bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 rounded-2xl flex flex-col items-center">
+                        <h4 class="font-bold text-teal-900 text-sm mb-3">Official NCERT Textbook Illustration</h4>
+                        <svg class="w-full max-w-sm h-36" viewBox="0 0 300 120">
+                            <rect x="20" y="30" width="90" height="50" rx="10" fill="#0d9488" />
+                            <text x="65" y="60" fill="white" font-size="12" font-weight="bold" text-anchor="middle">Input Data</text>
+                            <line x1="110" y1="55" x2="180" y2="55" stroke="#0d9488" stroke-width="3" />
+                            <circle cx="220" cy="55" r="30" fill="#f59e0b" />
+                            <text x="220" y="59" fill="white" font-size="11" font-weight="bold" text-anchor="middle">Process</text>
+                        </svg>
+                        <p class="text-xs text-slate-600 text-center">Refer to diagram observations for exercise questions on page 4.</p>
+                    </div>
+                `;
+            } else if (readerCurrentPage === 3) {
+                pageHtml = `
+                    <div class="border-b border-slate-200 pb-4">
+                        <span class="text-xs font-black text-teal-600 uppercase tracking-widest">SOLVED NCERT EXAMPLES • PAGE 3</span>
+                        <h2 class="text-2xl font-black text-slate-900 mt-1">Step-by-Step Worked Solutions</h2>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-indigo-50 border border-indigo-200 space-y-3">
+                        <span class="bg-indigo-600 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase">NCERT Example 1</span>
+                        <p class="font-bold text-slate-900 text-xs sm:text-sm">Apply the fundamental equation to derive the final answer.</p>
+                        <div class="bg-white p-4 rounded-xl border border-indigo-100 font-mono text-xs space-y-2 text-indigo-950">
+                            <p>Given: Value A = 100, Value B = 25</p>
+                            <p>Formula: Result = (A × B) / 10</p>
+                            <p class="text-teal-700 font-bold">Derived Answer = 250</p>
+                        </div>
+                    </div>
+                `;
+            } else if (readerCurrentPage === 4) {
+                pageHtml = `
+                    <div class="border-b border-slate-200 pb-4">
+                        <span class="text-xs font-black text-teal-600 uppercase tracking-widest">NCERT EXERCISE 1.1 • PAGE 4</span>
+                        <h2 class="text-2xl font-black text-slate-900 mt-1">Textbook Practice Questions</h2>
+                    </div>
+
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-slate-900 mb-2">Q1. Fill in the blanks:</h4>
+                            <p>(a) The primary unit is <span class="border-b-2 border-teal-600 font-bold px-4">Standard</span>.</p>
+                            <p class="mt-1">(b) Reaction releases <span class="border-b-2 border-teal-600 font-bold px-4">Oxygen Gas</span>.</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-slate-900 mb-1">Q2. Short Answer Question:</h4>
+                            <p class="text-slate-600">State two practical applications of this process in everyday life.</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                pageHtml = `
+                    <div class="border-b border-slate-200 pb-4">
+                        <span class="text-xs font-black text-teal-600 uppercase tracking-widest">CHAPTER SUMMARY & DID YOU KNOW? • PAGE 5</span>
+                        <h2 class="text-2xl font-black text-slate-900 mt-1">Key Takeaways</h2>
+                    </div>
+
+                    <div class="p-5 bg-amber-50 border border-amber-200 rounded-2xl space-y-2">
+                        <h4 class="font-bold text-amber-900 text-xs sm:text-sm flex items-center gap-2">
+                            💡 Did You Know?
+                        </h4>
+                        <p class="text-xs text-amber-800 leading-relaxed">
+                            Ancient Indian scholars contributed significantly to both Botany, Medical Science, and Mathematics foundational rules used across modern textbooks!
+                        </p>
+                    </div>
+                `;
+            }
+
+            body.innerHTML = pageHtml;
+            document.getElementById('btn-prev-page').disabled = (readerCurrentPage === 1);
+            document.getElementById('btn-next-page').disabled = (readerCurrentPage === readerTotalPages);
+
+            lucide.createIcons();
+        }
+
+        /* SAMPLE PAPERS & NOTES RENDERERS */
+        function renderSamplePapers() {
+            const classFilter = document.getElementById('sp-class-filter').value;
+            const container = document.getElementById('sample-papers-grid');
+            const filtered = SAMPLE_PAPERS_DATA.filter(sp => (classFilter === 'all' || sp.classNum === classFilter));
+
+            container.innerHTML = filtered.map(sp => `
+                <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <span class="bg-teal-100 text-teal-800 text-xs font-bold px-3 py-0.5 rounded-full mb-3 inline-block">Class ${sp.classNum} • ${sp.subject}</span>
+                        <h3 class="font-bold text-slate-900 text-base mb-2">${sp.title}</h3>
+                        <div class="flex items-center gap-4 text-xs text-slate-500 font-medium mb-4">
+                            <span>⏱️ ${sp.duration}</span>
+                            <span>🏆 ${sp.totalMarks}</span>
+                        </div>
+                    </div>
+                    <button onclick="openPdfModal('701')" class="w-full py-2.5 rounded-2xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold text-xs transition-colors flex items-center justify-center gap-1.5">
+                        <i data-lucide="eye" class="w-4 h-4"></i> Read Model Paper Online
+                    </button>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function renderNotes() {
+            const classFilter = document.getElementById('notes-class-filter').value;
+            const container = document.getElementById('notes-grid');
+            const filtered = NOTES_DATA.filter(n => n.classNum === classFilter);
+
+            container.innerHTML = filtered.map(n => `
+                <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+                    <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-0.5 rounded-full">Class ${n.classNum} • ${n.subject}</span>
+                    <h3 class="font-bold text-slate-900 text-base my-3">${n.chapter}</h3>
+                    <ul class="space-y-1.5 text-xs text-slate-700 font-medium">
+                        ${n.points.map(p => `<li>• ${p}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        /* MODAL & VOICE UTILITIES */
+        function openNotifyModal() {
+            document.getElementById('notify-modal').classList.remove('hidden');
+        }
+
+        function closeNotifyModal() {
+            document.getElementById('notify-modal').classList.add('hidden');
+        }
+
+        function submitNotificationAlert() {
+            const val = document.getElementById('notify-contact').value.trim();
+            if (!val) return alert("Please enter your mobile or email");
+            alert("Subscribed! You will receive updates on new class releases.");
+            closeNotifyModal();
+        }
+
+        function startVoiceInput() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) return alert("Voice input not supported on this browser");
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'hi-IN';
+            recognition.onstart = () => document.getElementById('solver-input').placeholder = "Listening in Hindi/English...";
+            recognition.onresult = (e) => {
+                document.getElementById('solver-input').value = e.results[0][0].transcript;
+                processMathQuery();
+            };
+            recognition.start();
+        }
+
+        function copySolutionToClipboard() {
+            const ans = document.getElementById('final-answer-display').innerText;
+            navigator.clipboard.writeText(`Answer: ${ans}`);
+            alert("Copied to clipboard!");
+        }
+
+        function handleGlobalSearch(query) {
+            if (!query) return;
+            switchTab('books');
+            renderBooks();
+        }
+    </script>
+</body>
+</html>
